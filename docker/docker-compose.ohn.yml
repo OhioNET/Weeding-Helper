@@ -3,12 +3,17 @@
 #
 # This file builds a containerized instance of Weeding Helper behind Traefik as a reverse proxy.
 # Images for Traefik and Ofelia are pulled from their respective authorities on Docker Hub.
-# Configurations and the database volume are bind-mounted to the project root's data directory
-#
-# If at some point you'd want to take this application into production, Traefik provides reverse
-# proxy functionality, support for automating Let's Encrypt certificates installation and renewal,
-# and other useful services.
+# Application image is pulled from OhioNet via Docker Hub.
 # -------------------------------------------------------------------------------------------------
+
+# --------------------------
+# Docker Networking Setup
+# --------------------------
+networks:
+  weeding-helper:
+    internal: true
+  gateway:
+    external: true
 
 # --------------------------
 # Docker Volume for MariaDB
@@ -18,34 +23,27 @@ volumes:
 
 
 services:
-# ---------------------------------------------------------------------
-# Traefik: reverse proxy and routing service
-# ---------------------------------------------------------------------
-  traefik:
-    container_name: traefik
-    image: traefik:v2.4
-    # ------------------------------------------------
-    # Listen to HTTP Port 80 and Docker
-    # ------------------------------------------------
-    command: --providers.docker=true
-    ports:
-      - "80:80"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-
 # ------------------------------------------------
 # Weeding Helper Application Code
 # ------------------------------------------------
   weeding-helper-app:
     container_name: weeding-helper-app
-    image: dzoladz/weeding-helper-app:latest
+    image: ohionet/weeding-helper-app:latest
     labels:
-    # ---------------------------------------------------------
-    # Assign an HTTP hostname = http://weeding.docker.localhost
-    # ---------------------------------------------------------
-      - "traefik.http.routers.weeding-helper.rule=Host(`weeding.docker.localhost`)"
+    #--------------------------------------------------------------------#
+    # Define the behavior and rules of Weeding Helper w/ Traefik         #
+    #--------------------------------------------------------------------#
+      - "traefik.enable=true" # Enable traefik on this container
+      - "traefik.http.routers.weeding.entrypoints=http" # Enable HTTP entrypoint for [portainer]
+      - "traefik.http.routers.weeding.rule=Host(`weeding.opal-libraries.org`)" # Define HTTP host
+      - "traefik.http.routers.weeding.middlewares=redirect@file" # Enforce HTTPS redirect
+      - "traefik.http.routers.weeding-ssl.entrypoints=https" # Enable HTTPS entrypoint for [portainer-ssl]
+      - "traefik.http.routers.weeding-ssl.rule=Host(`weeding.opal-libraries.org`)" # Define HTTPS host
+      - "traefik.http.routers.weeding-ssl.tls.certresolver=letsencrypt" # Use Let's Encrypt
     restart: unless-stopped
+    networks:
+      - weeding-helper
+      - gateway
 
 
 # ------------------------------------------------
@@ -56,15 +54,14 @@ services:
 # ------------------------------------------------
   weeding-helper-db:
     container_name: weeding-helper-db
-    image: dzoladz/weeding-helper-db:latest
+    image: ohionet/weeding-helper-db:latest
     restart: unless-stopped
     volumes:
       - weeding-helper-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: weeding
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+    env_file:
+      - .env
+    networks:
+      - weeding-helper
 
 
 # ------------------------------------------------------
@@ -79,3 +76,5 @@ services:
     volumes:
       - "./ofelia.ini:/etc/ofelia/config.ini"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - weeding-helper

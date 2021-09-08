@@ -6,3 +6,6 @@ upload/*
 prepped/*
 *.zip
 !/docker/app/config.php
+.idea
+.env
+docker/app/config-ohionet.php

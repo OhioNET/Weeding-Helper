@@ -20,7 +20,7 @@ COPY . /var/www/html
 
 # file overrides from /docker directory
 COPY ./docker/app/style.css /var/www/html/style.css
-COPY ./docker/app/config.php /var/www/html/config.php
+COPY ./docker/app/config-ohionet.php /var/www/html/config.php
 COPY ./docker/app/scripts.php /var/www/html/scripts.php
 COPY ./docker/app/copytwo.php /var/www/html/copytwo.php
 COPY ./docker/app/upload.php /var/www/html/upload.php
