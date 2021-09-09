@@ -10,7 +10,7 @@
 # Docker Networking Setup
 # --------------------------
 networks:
-  weeding-helper:
+  weeding:
     internal: true
   gateway:
     external: true
@@ -42,7 +42,7 @@ services:
       - "traefik.http.routers.weeding-ssl.tls.certresolver=letsencrypt" # Use Let's Encrypt
     restart: unless-stopped
     networks:
-      - weeding-helper
+      - weeding
       - gateway
 
 
@@ -61,7 +61,7 @@ services:
     env_file:
       - .env
     networks:
-      - weeding-helper
+      - weeding
 
 
 # ------------------------------------------------------
@@ -77,4 +77,4 @@ services:
       - "./ofelia.ini:/etc/ofelia/config.ini"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
-      - weeding-helper
+      - weeding
