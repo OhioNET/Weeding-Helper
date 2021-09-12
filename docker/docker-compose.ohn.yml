@@ -10,7 +10,7 @@
 # Docker Networking Setup
 # --------------------------
 networks:
-  weeding-helper:
+  weeding:
     internal: true
   gateway:
     external: true
@@ -35,14 +35,17 @@ services:
     #--------------------------------------------------------------------#
       - "traefik.enable=true" # Enable traefik on this container
       - "traefik.http.routers.weeding.entrypoints=http" # Enable HTTP entrypoint for [portainer]
-      - "traefik.http.routers.weeding.rule=Host(`weeding.opal-libraries.org`)" # Define HTTP host
+      - "traefik.http.routers.weeding.rule=Host(`weeding2.opal-libraries.org`)" # Define HTTP host
       - "traefik.http.routers.weeding.middlewares=redirect@file" # Enforce HTTPS redirect
       - "traefik.http.routers.weeding-ssl.entrypoints=https" # Enable HTTPS entrypoint for [portainer-ssl]
-      - "traefik.http.routers.weeding-ssl.rule=Host(`weeding.opal-libraries.org`)" # Define HTTPS host
+      - "traefik.http.routers.weeding-ssl.rule=Host(`weeding2.opal-libraries.org`)" # Define HTTPS host
       - "traefik.http.routers.weeding-ssl.tls.certresolver=letsencrypt" # Use Let's Encrypt
+      - "traefik.http.routers.weeding.middlewares=weeding-auth" # Enable basic authentication middleware on HTTP route 
+      - "traefik.http.routers.weeding-ssl.middlewares=weeding-auth" # Enable basic authentication middlware on HTTPS route
+      - "traefik.http.middlewares.weeding-auth.basicauth.users=opal:$$apr1$$bygp3zxc$$4MGGXTvZWBuDDufT/OCVJ/" # Enable authentication. opal:encrypted_password 
     restart: unless-stopped
     networks:
-      - weeding-helper
+      - weeding
       - gateway
 
 
@@ -61,7 +64,7 @@ services:
     env_file:
       - .env
     networks:
-      - weeding-helper
+      - weeding
 
 
 # ------------------------------------------------------
@@ -77,4 +80,4 @@ services:
       - "./ofelia.ini:/etc/ofelia/config.ini"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
-      - weeding-helper
+      - weeding
