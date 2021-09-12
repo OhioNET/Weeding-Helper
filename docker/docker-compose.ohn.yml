@@ -40,6 +40,9 @@ services:
       - "traefik.http.routers.weeding-ssl.entrypoints=https" # Enable HTTPS entrypoint for [portainer-ssl]
       - "traefik.http.routers.weeding-ssl.rule=Host(`weeding.opal-libraries.org`)" # Define HTTPS host
       - "traefik.http.routers.weeding-ssl.tls.certresolver=letsencrypt" # Use Let's Encrypt
+      - "traefik.http.routers.weeding.middlewares=weeding-auth" # Enable basic authentication middleware on HTTP route
+      - "traefik.http.routers.weeding-ssl.middlewares=weeding-auth" # Enable basic authentication middleware on HTTPS route
+      - "traefik.http.middlewares.weeding-auth.basicauth.users=${WEEDING_USERNAME}:${WEEDING_PASSWORD}" # Enable authentication. opal:encrypted_password
     restart: unless-stopped
     networks:
       - weeding-helper
