@@ -12,5 +12,5 @@ build: ## Build OhioNet Weeding Helper Images
 start: ## Start Weeding Helper Containers
         docker-compose -f docker/docker-compose.ohn.yml up -d
 
-stop: ## Stop Weeding Helper Containers
+stop: ## Stop Weeding Helper Container
         docker-compose -f docker/docker-compose.ohn.yml stop
