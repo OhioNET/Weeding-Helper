@@ -4,8 +4,8 @@
 # -------------------------------------------------------
 
 # Build the Application Images
-docker build -t dzoladz/weeding-helper-app -f docker/app/Dockerfile .
-docker build -t dzoladz/weeding-helper-db -f docker/db/Dockerfile .
+docker build -t ohionet/weeding-helper-app -f docker/app/Dockerfile .
+docker build -t ohionet/weeding-helper-db -f docker/db/Dockerfile .
 
 # Bring the Application Up
 docker compose -f docker/docker-compose.yml up -d
