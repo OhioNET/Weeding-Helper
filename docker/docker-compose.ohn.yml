@@ -10,7 +10,7 @@
 # Docker Networking Setup
 # --------------------------
 networks:
-  weeding-helper:
+  weeding:
     internal: true
   gateway:
     external: true
@@ -45,7 +45,7 @@ services:
       - "traefik.http.middlewares.weeding-auth.basicauth.users=${WEEDING_USERNAME}:${WEEDING_PASSWORD}" # Enable authentication. opal:encrypted_password
     restart: unless-stopped
     networks:
-      - weeding-helper
+      - weeding
       - gateway
 
 
@@ -64,7 +64,7 @@ services:
     env_file:
       - .env
     networks:
-      - weeding-helper
+      - weeding
 
 
 # ------------------------------------------------------
@@ -80,4 +80,4 @@ services:
       - "./ofelia.ini:/etc/ofelia/config.ini"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
-      - weeding-helper
+      - weeding
