@@ -34,10 +34,10 @@ services:
     # Define the behavior and rules of Weeding Helper w/ Traefik         #
     #--------------------------------------------------------------------#
       - "traefik.enable=true" # Enable traefik on this container
-      - "traefik.http.routers.weeding.entrypoints=http" # Enable HTTP entrypoint for [portainer]
+      - "traefik.http.routers.weeding.entrypoints=http" # Enable HTTP entrypoint for [weeding helper]
       - "traefik.http.routers.weeding.rule=Host(`weeding.opal-libraries.org`)" # Define HTTP host
       - "traefik.http.routers.weeding.middlewares=redirect@file" # Enforce HTTPS redirect
-      - "traefik.http.routers.weeding-ssl.entrypoints=https" # Enable HTTPS entrypoint for [portainer-ssl]
+      - "traefik.http.routers.weeding-ssl.entrypoints=https" # Enable HTTPS entrypoint for [weeding helper ssl]
       - "traefik.http.routers.weeding-ssl.rule=Host(`weeding.opal-libraries.org`)" # Define HTTPS host
       - "traefik.http.routers.weeding-ssl.tls.certresolver=letsencrypt" # Use Let's Encrypt
       - "traefik.http.routers.weeding.middlewares=weeding-auth" # Enable basic authentication middleware on HTTP route
