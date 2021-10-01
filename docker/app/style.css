@@ -1,3 +1,5 @@
+.button-cell > a[data-tooltip="Delete Table"] {margin-left: 40px};
+
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
