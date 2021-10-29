@@ -9,3 +9,5 @@ prepped/*
 .idea
 .env
 docker/app/config-ohionet.php
+.DS_Store
+docker/docker-compose.ohn.yml 
