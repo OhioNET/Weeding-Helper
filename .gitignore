@@ -9,3 +9,4 @@ prepped/*
 .idea
 .env
 docker/app/config-ohionet.php
+.DS_Store
