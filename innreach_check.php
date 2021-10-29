@@ -91,7 +91,7 @@ function CheckInnReach($bib, $volume="") {
     if ($html) { $html->clear(); }
       $html = file_get_html($url);
       if ($holdings) { $holdings->clear();}
-      ($holdings = $html->find($innreach[holdings_selector])) || $size = -1;
+      ($holdings = $html->find($innreach['holdings_selector'])) || $size = -1;
       if (is_array($holdings)) { $size = sizeof($holdings); }
   }
   if ($size > 0) {
