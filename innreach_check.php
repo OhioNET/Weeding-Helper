@@ -103,7 +103,7 @@ function CheckInnReach($bib, $volume="") {
       if (! preg_match("/$innreach[local_display_name]/i", $loc)) {
 	// check to see if it's the right volume, if volume specified
 	$rightvol = false;
-	$call_statement = $line->find('td',3);
+	$call_statement = $line->find('td',2);
 	if (preg_match("/v(ol)?\. *(\d+)/", $call_statement, $m)) {
 	  if ($m[2] == $volume) {
 	    echo "$m[2] =~ $call_statement<br>\n";
@@ -112,7 +112,7 @@ function CheckInnReach($bib, $volume="") {
 	}
 	// if it's the right volume, if there is assumed to only be one volume, increment that copy
 	if ( $rightvol || $volume == "") {
-	$status = $line->find('td', 4);
+	$status = $line->find('td', 3);
 	$this_stat = $status->innertext;
 	if (preg_match ("/AVAIL|DUE/", $this_stat)) { $this_stat = "CIRC"; }
 	if ($this_stat != "")
