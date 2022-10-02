@@ -43,8 +43,8 @@ function BatchCheck ($table, $hits, $sleep) {
     print "<h4>$bib_record: $title</h4>\n";
     $innreach_count = CheckInnReach($bib_record, $volume);
     // print_r($innreach);
-    if (! $innreach_count['CIRC']) { $innreach_count['CIRC'] = 0; }
-      //  print "<p>$innreach['CIRC'] / ". array_sum($innreach) ."</p>\n";
+    if (! $innreach_count[CIRC]) { $innreach_count[CIRC] = 0; }
+      //  print "<p>$innreach[CIRC] / ". array_sum($innreach) ."</p>\n";
     $uq = "UPDATE $table SET innreach_circ_copies = '$innreach_count[CIRC]', innreach_total_copies = '". array_sum($innreach_count) ."' WHERE bib_record = '$bib_record'";
     print "<p>$uq</p>\n";
     $db->query($uq);
@@ -91,7 +91,7 @@ function CheckInnReach($bib, $volume="") {
     if ($html) { $html->clear(); }
       $html = file_get_html($url);
       if ($holdings) { $holdings->clear();}
-      ($holdings = $html->find($innreach[holdings_selector])) || $size = -1;
+      ($holdings = $html->find($innreach['holdings_selector'])) || $size = -1;
       if (is_array($holdings)) { $size = sizeof($holdings); }
   }
   if ($size > 0) {
@@ -103,7 +103,7 @@ function CheckInnReach($bib, $volume="") {
       if (! preg_match("/$innreach[local_display_name]/i", $loc)) {
 	// check to see if it's the right volume, if volume specified
 	$rightvol = false;
-	$call_statement = $line->find('td',3);
+	$call_statement = $line->find('td',2);
 	if (preg_match("/v(ol)?\. *(\d+)/", $call_statement, $m)) {
 	  if ($m[2] == $volume) {
 	    echo "$m[2] =~ $call_statement<br>\n";
@@ -112,7 +112,7 @@ function CheckInnReach($bib, $volume="") {
 	}
 	// if it's the right volume, if there is assumed to only be one volume, increment that copy
 	if ( $rightvol || $volume == "") {
-	$status = $line->find('td', 4);
+	$status = $line->find('td', 3);
 	$this_stat = $status->innertext;
 	if (preg_match ("/AVAIL|DUE/", $this_stat)) { $this_stat = "CIRC"; }
 	if ($this_stat != "")
